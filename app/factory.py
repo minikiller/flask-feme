@@ -2,9 +2,13 @@ import logging
 import os
 import sys
 from logging.handlers import RotatingFileHandler
-
+from flask_jwt import JWT
+from flask_security import Security
+from flask_security.utils import encrypt_password
 from flask import Flask, Blueprint
-from app.resources import initialize_trades
+from app.resources import initialize_api
+from app.models.database import user_datastore
+from app.authentication import load_user,authenticate
 
 from .config import config
 
@@ -51,5 +55,17 @@ class Factory:
         from flask_restful import Api
         api_bp = Blueprint('api', __name__)
         api = Api(api_bp)
-        initialize_trades(api)
+        initialize_api(api)
         self.flask.register_blueprint(api_bp, url_prefix='/api/v1')
+    
+    def set_security(self):
+        #############################################
+        ########## Security - Flask-Security and JWT
+        #############################################
+        security = Security(self.flask, user_datastore)
+        jwt = JWT(self.flask, authenticate, load_user)
+
+        #############################################
+        ########## Bootstrap Several Users
+        # https://github.com/graup/flask-restless-security/blob/master/server.py
+        #############################################

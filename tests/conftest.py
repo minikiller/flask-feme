@@ -22,8 +22,8 @@ def flask_app():
     with app.app_context():
         db.create_all()
         yield app
-        db.session.close_all()
-        db.drop_all()
+        # db.session.close_all()
+        # db.drop_all()
 
 
 @pytest.fixture(scope='module')

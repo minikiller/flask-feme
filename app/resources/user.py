@@ -1,37 +1,67 @@
+import json
 from flask_restful import Resource
-from app.models.trade import Trade, TradeSchema
-from flask import request, jsonify, make_response
 from marshmallow import ValidationError
 from sqlalchemy.exc import SQLAlchemyError
-from app.models.database import db
+from flask_security.utils import encrypt_password
+from flask import jsonify, make_response, request, abort
+from flask_jwt import jwt_required
+from app.models.database import User, UserSchema, db, user_datastore
 
 
 # http://marshmallow.readthedocs.org/en/latest/quickstart.html#declaring-schemas
 # https://github.com/marshmallow-code/marshmallow-jsonapi
-schema = TradeSchema()
-# schema = TradeSchema(include_data=('owner',))
+schema = UserSchema()
 
 
-class TradeListApi(Resource):
+class UserList(Resource):
+    @jwt_required()
     def get(self):
-        trades_query = Trade.query.all()
+        '''
+        http://jsonapi.org/format/#fetching
+        A server MUST respond to a successful request to fetch an individual resource or resource collection
+        with a 200 OK response.
 
-        results = schema.dump(trades_query, many=True)['data']
+        A server MUST respond with 404 Not Found when processing a request to fetch a single resource that
+        does not exist, except when the request warrants a 200 OK response with null as the primary data
+        (as described above) a self link as part of the top-level links object
+        '''
+        users_query = User.query.all()
+        results = schema.dump(users_query, many=True)['data']
         return results
 
+    @jwt_required()
     def post(self):
-        # now_time = datetime.datetime.now()
+        '''
+        http://jsonapi.org/format/#crud
+        A resource can be created by sending a POST request to a URL that represents a collection of resources.
+        The request MUST include a single resource object as primary data. The resource object MUST contain at
+        least a type member.
+
+        If a POST request did not include a Client-Generated ID and the requested resource has been created
+        successfully, the server MUST return a 201 Created status code
+        '''
         raw_dict = request.get_json(force=True)
         try:
             # Validate Data
             schema.validate(raw_dict)
-            trade = Trade(name=raw_dict['name'],symbol=raw_dict['symbol'])
 
-            trade.add(trade)
+            # Save the new user
+            user_dict = raw_dict['data']['attributes']
+            user_datastore.create_user(email=user_dict['email'],
+                                       password=encrypt_password(
+                                           user_dict['password']),
+                                       first_name=user_dict['first_name'],
+                                       last_name=user_dict['last_name'],
+                                       )
 
-            # Return the new dog information
-            query = Trade.query.get(trade.id)
-            results = schema.dump(query)
+            db.session.commit()
+
+            # Activate the User
+            user = user_datastore.find_user(email=user_dict['email'])
+            user_datastore.activate_user(user)
+
+            # Return new user information
+            results = schema.dump(user).data
             return results, 201
 
         except ValidationError as err:
@@ -46,8 +76,10 @@ class TradeListApi(Resource):
             return resp
 
 
-class TradeApi(Resource):
-    def get(self, trade_id):
+class UserUpdate(Resource):
+
+    @jwt_required()
+    def get(self, id):
         '''
         http://jsonapi.org/format/#fetching
         A server MUST respond to a successful request to fetch an individual resource or resource collection with
@@ -57,11 +89,15 @@ class TradeApi(Resource):
         exist, except when the request warrants a 200 OK response with null as the primary data (as described above)
         a self link as part of the top-level links object
         '''
-        trade_query = Trade.query.get_or_404(trade_id)
-        result = schema.dump(trade_query)
-        return result
-    
-    def patch(self, trade_id):
+        try:
+            user_query = user_datastore.find_user(id=id)
+            result = schema.dump(user_query).data
+            return result
+        except KeyError as err:
+            abort(404)
+
+    @jwt_required()
+    def patch(self, id):
         '''
         http://jsonapi.org/format/#crud-updating
         The PATCH request MUST include a single resource object as primary data. The resource object MUST contain
@@ -77,17 +113,20 @@ class TradeApi(Resource):
 
         A server MUST return 404 Not Found when processing a request to modify a resource that does not exist.
         '''
-        trade = Trade.query.get_or_404(trade_id)
+        try:
+            user = user_datastore.find_user(id=id)
+        except KeyError as err:
+            abort(404)
+
         raw_dict = request.get_json(force=True)
 
         try:
             schema.validate(raw_dict)
-            trade_dict = raw_dict['data']['attributes']
-            for key, value in trade_dict.items():
+            user_dict = raw_dict['data']['attributes']
+            for key, value in user_dict.items():
+                setattr(user, key, value)
 
-                setattr(trade, key, value)
-
-            trade.update()
+            db.session.commit()
             return self.get(id)
 
         except ValidationError as err:
@@ -101,14 +140,19 @@ class TradeApi(Resource):
             resp.status_code = 401
             return resp
 
-    def delete(self, trade_id):
+    @jwt_required()
+    def delete(self, id):
         '''
         http://jsonapi.org/format/#crud-deleting
         A server MUST return a 204 No Content status code if a deletion request is successful and no content is returned.
         '''
-        trade = Trade.query.get_or_404(trade_id)
         try:
-            delete = trade.delete(trade)
+            user = user_datastore.find_user(id=id)
+        except KeyError as err:
+            abort(404)
+        try:
+            delete = user_datastore.delete_user(user)
+            db.session.commit()
             response = make_response()
             response.status_code = 204
             return response
