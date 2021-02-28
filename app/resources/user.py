@@ -4,7 +4,7 @@ from marshmallow import ValidationError
 from sqlalchemy.exc import SQLAlchemyError
 from flask_security.utils import encrypt_password
 from flask import jsonify, make_response, request, abort
-from flask_jwt import jwt_required
+from flask_jwt import jwt_required, current_identity
 from app.models.database import User, UserSchema, db, user_datastore
 
 
@@ -27,6 +27,7 @@ class UserList(Resource):
         '''
         users_query = User.query.all()
         results = schema.dump(users_query, many=True)['data']
+        print('current user id is :',current_identity)
         return results
 
     @jwt_required()

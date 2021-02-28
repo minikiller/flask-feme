@@ -113,3 +113,16 @@ Authorization : JWT AUTH_TOKEN
 You'll notice that there are several lines of code under the "Bootstrap Several Users" section in ```main.py```. These users will be created if there are no users in the database, once you run the server, and hit an endpoint. I recommend using [Postman](https://www.getpostman.com/) to hit the endpoint ```localhost:5000/api/v1/dogs``` to get these users started.
 
 **Note:** Make sure that once you're aware of this code there and the users that they create if using this boilerplate for a production-level application!
+
+
+### todo
+#### get user name from JWT
+```
+flask-jwt: current_identity
+```
+
+#### add logger file 
+
+### Heroku deployment - One Click Deploy
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/minikiller/flask-feme)
