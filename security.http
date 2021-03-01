@@ -1,15 +1,35 @@
 ###
-POST  http://127.0.0.1:5000/api/v1/auth HTTP/1.1
+POST  http://127.0.0.1:5000/dev-api/v1/auth HTTP/1.1
 content-type: application/json
 
 {
-    "username": "test1@gmail.com",
+    "username": "test2@gmail.com",
     "password": "testing123"
 }
 
+
 ###
-GET  http://127.0.0.1:5000/api/v1/users
+POST  http://127.0.0.1:5000/login HTTP/1.1
+content-type: application/json
+
+{
+    "username": "test2@gmail.com",
+    "password": "testing123"
+}
+###
+GET  http://127.0.0.1:5000/dev-api/v1/users
 Authorization : JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MTcwMjkwNTcsImlhdCI6MTYxNDQzNzA1NywibmJmIjoxNjE0NDM3MDU3LCJpZGVudGl0eSI6MX0.AP5hMrH9H36uC0eqbu1wzNeVSm56ysRB_dhUQ5MfbMc
+
+
+###
+GET  http://127.0.0.1:5000/dev-api/v1/logout
+Authorization : JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MTcwMjkwNTcsImlhdCI6MTYxNDQzNzA1NywibmJmIjoxNjE0NDM3MDU3LCJpZGVudGl0eSI6MX0.AP5hMrH9H36uC0eqbu1wzNeVSm56ysRB_dhUQ5MfbMc
+
+
+###
+GET  http://127.0.0.1:5000/dev-api/v1/user/1
+Authorization : JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MTcwMjkwNTcsImlhdCI6MTYxNDQzNzA1NywibmJmIjoxNjE0NDM3MDU3LCJpZGVudGl0eSI6MX0.AP5hMrH9H36uC0eqbu1wzNeVSm56ysRB_dhUQ5MfbMc
+
 
 ###
 GET  http://127.0.0.1:5000/api/v1/roles

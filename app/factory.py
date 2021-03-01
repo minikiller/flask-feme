@@ -56,7 +56,7 @@ class Factory:
         api_bp = Blueprint('api', __name__)
         api = Api(api_bp)
         initialize_api(api)
-        self.flask.register_blueprint(api_bp, url_prefix='/api/v1')
+        self.flask.register_blueprint(api_bp, url_prefix='/dev-api/v1')
     
     def set_security(self):
         #############################################

@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 0fb2eb6d61f7
+Revision ID: 65c7065f3f79
 Revises: 
-Create Date: 2021-02-27 22:43:18.787334
+Create Date: 2021-03-01 15:40:19.397270
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '0fb2eb6d61f7'
+revision = '65c7065f3f79'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -37,9 +37,15 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
-    sa.Column('name', sa.String(), nullable=True),
     sa.Column('symbol', sa.String(), nullable=True),
-    sa.Column('roster_id', sa.Integer(), nullable=True),
+    sa.Column('strikePrice', sa.Float(), nullable=True),
+    sa.Column('lowLimitPrice', sa.Float(), nullable=True),
+    sa.Column('highLimitPrice', sa.Float(), nullable=True),
+    sa.Column('tradingReferencePrice', sa.Float(), nullable=True),
+    sa.Column('securityID', sa.String(), nullable=True),
+    sa.Column('cfiCode', sa.String(), nullable=True),
+    sa.Column('activationDate', sa.String(), nullable=True),
+    sa.Column('lastEligibleTradeDate', sa.String(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('user',

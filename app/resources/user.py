@@ -92,7 +92,7 @@ class UserUpdate(Resource):
         '''
         try:
             user_query = user_datastore.find_user(id=id)
-            result = schema.dump(user_query).data
+            result = schema.dump(user_query)['data']
             return result
         except KeyError as err:
             abort(404)

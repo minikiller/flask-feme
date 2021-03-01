@@ -1,5 +1,5 @@
 ###
-POST  http://flask-feme.herokuapp.com/api/v1/auth HTTP/1.1
+POST  https://flask-feme.herokuapp.com/api/v1/auth HTTP/1.1
 content-type: application/json
 
 {
@@ -9,7 +9,7 @@ content-type: application/json
 
 ###
 GET  http://flask-feme.herokuapp.com/api/v1/users
-Authorization : JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MTcwMjkwNTcsImlhdCI6MTYxNDQzNzA1NywibmJmIjoxNjE0NDM3MDU3LCJpZGVudGl0eSI6MX0.AP5hMrH9H36uC0eqbu1wzNeVSm56ysRB_dhUQ5MfbMc
+Authorization : JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MTcwNzE5NDksImlhdCI6MTYxNDQ3OTk0OSwibmJmIjoxNjE0NDc5OTQ5LCJpZGVudGl0eSI6MX0.YGBHPFXz3XjMojn1-6YVSdTUCPN-zrUdtymSW2-SYJk
 
 ###
 GET  http://flask-feme.herokuapp.com/api/v1/roles

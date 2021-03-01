@@ -18,13 +18,13 @@ def initialize_trades(api):
 def initialize_users(api):
     # Users
     api.add_resource(UserList, '/users')
-    api.add_resource(UserUpdate, '/users/<int:id>')
+    api.add_resource(UserUpdate, '/user/<int:id>')
 
 
 def initialize_roles(api):
     # Roles
     api.add_resource(RoleList, '/roles')
-    api.add_resource(RoleUpdate, '/roles/<int:id>')
+    api.add_resource(RoleUpdate, '/role/<int:id>')
 
 
 def initialize_api(api):

@@ -1,7 +1,8 @@
 import click
 from werkzeug.middleware.proxy_fix import ProxyFix
 from app.models.base import db
-from app.models.database import user_datastore,User
+from app.models.database import user_datastore, User
+from app.models.trade import Trade
 from .factory import Factory
 from flask_security.utils import encrypt_password
 
@@ -55,6 +56,129 @@ def create_app(environment='development'):
 #############################################
 
 
+def create_trade_models():
+    # # Create a couple of dogs and tie them to owners
+    trade = Trade()
+    trade.symbol = 'FMG3-DEC20'
+    trade.strikePrice = 10.00
+    trade.lowLimitPrice = 9.00
+    trade.highLimitPrice = 20.00
+    trade.tradingReferencePrice = 29.00
+    trade.securityID = '001'
+    trade.cfiCode = '001'
+    trade.activationDate = "20210201-22:30:00.00"
+    trade.lastEligibleTradeDate = "20210201-22:30:00.00"
+    trade.add(trade)
+  
+    trade = Trade()
+    trade.symbol = 'FMG3-MAR21'
+    trade.strikePrice = 10.00
+    trade.lowLimitPrice = 9.00
+    trade.highLimitPrice = 20.00
+    trade.tradingReferencePrice = 29.00
+    trade.securityID = '002'
+    trade.cfiCode = '001'
+    trade.activationDate = "20210201-22:30:00.00"
+    trade.lastEligibleTradeDate = "20210201-22:30:00.00"
+    trade.add(trade)
+
+    trade = Trade()
+    trade.symbol = 'FMG3-JUN21'
+    trade.strikePrice = 10.00
+    trade.lowLimitPrice = 9.00
+    trade.highLimitPrice = 20.00
+    trade.tradingReferencePrice = 29.00
+    trade.securityID = '003'
+    trade.cfiCode = '001'
+    trade.activationDate = "20210201-22:30:00.00"
+    trade.lastEligibleTradeDate = "20210201-22:30:00.00"
+    trade.add(trade)
+
+    trade = Trade()
+    trade.symbol = 'FMG3-SEP21'
+    trade.strikePrice = 10.00
+    trade.lowLimitPrice = 9.00
+    trade.highLimitPrice = 20.00
+    trade.tradingReferencePrice = 29.00
+    trade.securityID = '004'
+    trade.cfiCode = '003'
+    trade.activationDate = "20210201-22:30:00.00"
+    trade.lastEligibleTradeDate = "20210201-22:30:00.00"
+    trade.add(trade)
+
+    trade = Trade()
+    trade.symbol = 'FMG3-DEC20-MAR21'
+    trade.strikePrice = 10.00
+    trade.lowLimitPrice = 9.00
+    trade.highLimitPrice = 20.00
+    trade.tradingReferencePrice = 29.00
+    trade.securityID = '005'
+    trade.cfiCode = '001'
+    trade.activationDate = "20210201-22:30:00.00"
+    trade.lastEligibleTradeDate = "20210201-22:30:00.00"
+    trade.add(trade)
+
+    trade = Trade()
+    trade.symbol = 'FMG3-DEC20-JUN21'
+    trade.strikePrice = 10.00
+    trade.lowLimitPrice = 9.00
+    trade.highLimitPrice = 20.00
+    trade.tradingReferencePrice = 29.00
+    trade.securityID = '006'
+    trade.cfiCode = '001'
+    trade.activationDate = "20210201-22:30:00.00"
+    trade.lastEligibleTradeDate = "20210201-22:30:00.00"
+    trade.add(trade)
+
+    trade = Trade()
+    trade.symbol = 'FMG3-DEC20-SEP21'
+    trade.strikePrice = 10.00
+    trade.lowLimitPrice = 9.00
+    trade.highLimitPrice = 20.00
+    trade.tradingReferencePrice = 29.00
+    trade.securityID = '007'
+    trade.cfiCode = '001'
+    trade.activationDate = "20210201-22:30:00.00"
+    trade.lastEligibleTradeDate = "20210201-22:30:00.00"
+    trade.add(trade)
+
+    trade = Trade()
+    trade.symbol = 'FMG3-MAR21-JUN21'
+    trade.strikePrice = 10.00
+    trade.lowLimitPrice = 9.00
+    trade.highLimitPrice = 20.00
+    trade.tradingReferencePrice = 29.00
+    trade.securityID = '008'
+    trade.cfiCode = '001'
+    trade.activationDate = "20210201-22:30:00.00"
+    trade.lastEligibleTradeDate = "20210201-22:30:00.00"
+    trade.add(trade)
+
+    trade = Trade()
+    trade.symbol = 'FMG3-MAR21-SEP21'
+    trade.strikePrice = 10.00
+    trade.lowLimitPrice = 9.00
+    trade.highLimitPrice = 20.00
+    trade.tradingReferencePrice = 29.00
+    trade.securityID = '009'
+    trade.cfiCode = '001'
+    trade.activationDate = "20210201-22:30:00.00"
+    trade.lastEligibleTradeDate = "20210201-22:30:00.00"
+    trade.add(trade)
+
+    trade = Trade()
+    trade.symbol = 'FMG3-JUN21-SEP21'
+    trade.strikePrice = 10.00
+    trade.lowLimitPrice = 9.00
+    trade.highLimitPrice = 20.00
+    trade.tradingReferencePrice = 29.00
+    trade.securityID = '010'
+    trade.cfiCode = '001'
+    trade.activationDate = "20210201-22:30:00.00"
+    trade.lastEligibleTradeDate = "20210201-22:30:00.00"
+    trade.add(trade)
+
+
 def create_test_models():
     # Create the default roles
     basic = user_datastore.find_or_create_role(
@@ -88,18 +212,7 @@ def create_test_models():
 
     # Save changes
     db.session.commit()
+    create_trade_models()
 
-    # # Create a couple of dogs and tie them to owners
-    # dog = Dog('Labrador')
-    # dog.owner = user2
-    # dog.add(dog)
-
-    # dog = Dog('Great Dane')
-    # dog.owner = user2
-    # dog.add(dog)
-
-    # dog = Dog('Husky')
-    # dog.owner = user3
-    # dog.add(dog)
 
 

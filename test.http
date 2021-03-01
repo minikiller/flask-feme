@@ -1,11 +1,11 @@
 ###
-GET http://127.0.0.1:5000/api/v1/trades HTTP/1.1
+GET http://127.0.0.1:5000/dev-api/v1/trades HTTP/1.1
 
 ###
-POST http://127.0.0.1:5000/api/v1/trades
+POST http://127.0.0.1:5000/dev-api/v1/trades
 content-type: application/json
 
 {
-    "name": "sample2",
-    "symbol": "male2"
+    "name": "sample1",
+    "symbol": "male1"
 }

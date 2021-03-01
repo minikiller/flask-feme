@@ -1,5 +1,5 @@
 from .base import Base
-from sqlalchemy import Column, DateTime, func, Integer, String
+from sqlalchemy import Column, DateTime, func, Integer, String, Float
 from .database import CRUD
 from marshmallow import validate
 from marshmallow_jsonapi import Schema, fields
@@ -10,9 +10,15 @@ PASSWORD_LENGTH = validate.Length(min=10, error='Password too short')
 
 
 class Trade(Base, CRUD):
-    name = Column(String)
     symbol = Column(String)
-    roster_id = Column(Integer)  # roster id
+    strikePrice = Column(Float)
+    lowLimitPrice = Column(Float)
+    highLimitPrice = Column(Float)
+    tradingReferencePrice = Column(Float)
+    securityID = Column(String)
+    cfiCode = Column(String)
+    activationDate = Column(String)
+    lastEligibleTradeDate = Column(String)
 
 
 class TradeSchema(Schema):
@@ -20,8 +26,14 @@ class TradeSchema(Schema):
     # Validation for the different fields
     id = fields.Integer(dump_only=True)
     symbol = fields.String(validate=NOT_BLANK)
-    created_at = fields.DateTime(dump_only=True)
-    roster_id = fields.String(dump_only=True)  # roster id
+    strikePrice = fields.Float(dump_only=True)
+    lowLimitPrice = fields.Float(dump_only=True)
+    highLimitPrice = fields.Float(dump_only=True)
+    tradingReferencePrice = fields.Float(dump_only=True)
+    securityID = fields.String(dump_only=True)
+    cfiCode = fields.String(dump_only=True)
+    activationDate = fields.String(dump_only=True)
+    lastEligibleTradeDate = fields.String(dump_only=True)
 
     # owner = fields.Relationship(related_url='/users/{user_id}',
     #                             related_url_kwargs={'user_id': '<owner_id>'},
