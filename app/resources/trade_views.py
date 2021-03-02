@@ -4,6 +4,7 @@ from flask import request, jsonify, make_response
 from marshmallow import ValidationError
 from sqlalchemy.exc import SQLAlchemyError
 from app.models.database import db
+import json
 
 
 # http://marshmallow.readthedocs.org/en/latest/quickstart.html#declaring-schemas
@@ -16,8 +17,8 @@ class TradeListApi(Resource):
     def get(self):
         trades_query = Trade.query.all()
 
-        results = schema.dump(trades_query, many=True)['data']
-        return results
+        results = schema.dump(trades_query, many=True)
+        return {"trades": results}
 
     def post(self):
         # now_time = datetime.datetime.now()
@@ -25,14 +26,21 @@ class TradeListApi(Resource):
         try:
             # Validate Data
             schema.validate(raw_dict)
-            trade = Trade(name=raw_dict['name'],symbol=raw_dict['symbol'])
+            trade = Trade()
+            trade_dict = raw_dict
+            for key, value in trade_dict.items():
+
+                setattr(trade, key, value)
 
             trade.add(trade)
 
             # Return the new dog information
-            query = Trade.query.get(trade.id)
-            results = schema.dump(query)
-            return results, 201
+            # query = Trade.query.get(trade.id)
+            # results = schema.dump(query)
+            # return results, 201
+            response = jsonify({"code": 1})
+            response.status_code = 201
+            return response
 
         except ValidationError as err:
             resp = jsonify({"error": err.messages})
@@ -60,8 +68,8 @@ class TradeApi(Resource):
         trade_query = Trade.query.get_or_404(trade_id)
         result = schema.dump(trade_query)
         return result
-    
-    def patch(self, trade_id):
+
+    def put(self, trade_id):
         '''
         http://jsonapi.org/format/#crud-updating
         The PATCH request MUST include a single resource object as primary data. The resource object MUST contain
@@ -81,14 +89,16 @@ class TradeApi(Resource):
         raw_dict = request.get_json(force=True)
 
         try:
-            schema.validate(raw_dict)
-            trade_dict = raw_dict['data']['attributes']
+            # schema.validate(raw_dict)
+            trade_dict = raw_dict
             for key, value in trade_dict.items():
 
                 setattr(trade, key, value)
 
             trade.update()
-            return self.get(id)
+            response = jsonify({"code": 1})
+            response.status_code = 200
+            return response
 
         except ValidationError as err:
             resp = jsonify({"error": err.messages})
@@ -109,8 +119,8 @@ class TradeApi(Resource):
         trade = Trade.query.get_or_404(trade_id)
         try:
             delete = trade.delete(trade)
-            response = make_response()
-            response.status_code = 204
+            response = jsonify({"code": 1})
+            response.status_code = 200
             return response
 
         except SQLAlchemyError as e:

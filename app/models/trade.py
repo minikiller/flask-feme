@@ -2,7 +2,7 @@ from .base import Base
 from sqlalchemy import Column, DateTime, func, Integer, String, Float
 from .database import CRUD
 from marshmallow import validate
-from marshmallow_jsonapi import Schema, fields
+from marshmallow import Schema, fields
 
 # Create the validation for what we see as "not blank"
 NOT_BLANK = validate.Length(min=1, error='Field cannot be blank')
