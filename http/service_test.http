@@ -1,0 +1,15 @@
+###
+GET http://127.0.0.1:5000/dev-api/v1/ListService HTTP/1.1
+
+###
+GET http://127.0.0.1:5000/dev-api/v1/MDStartService HTTP/1.1
+
+###
+GET http://127.0.0.1:5000/dev-api/v1/MDStopService HTTP/1.1
+
+###
+GET http://127.0.0.1:5000/dev-api/v1/MEStartService HTTP/1.1
+
+###
+GET http://127.0.0.1:5000/dev-api/v1/MEStopService HTTP/1.1
+

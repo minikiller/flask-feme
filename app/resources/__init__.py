@@ -5,6 +5,7 @@ from flask import Blueprint
 from .trade_views import TradeListApi, TradeApi
 from .user import UserList, UserUpdate
 from .role import RoleList, RoleUpdate
+from .service import ListService, MDStartService, MDStopService, MEStartService, MEStopService
 # api = PatchedApi()
 
 # api.add_namespace(example_ns)
@@ -27,7 +28,16 @@ def initialize_roles(api):
     api.add_resource(RoleUpdate, '/role/<int:id>')
 
 
+def initialize_service(api):
+    # service
+    api.add_resource(ListService, '/ListService')
+    api.add_resource(MDStartService, '/MDStartService')
+    api.add_resource(MDStopService, '/MDStopService')
+    api.add_resource(MEStartService, '/MEStartService')
+    api.add_resource(MEStopService, '/MEStopService')
+
 def initialize_api(api):
     initialize_users(api)
     initialize_roles(api)
     initialize_trades(api)
+    initialize_service(api)
