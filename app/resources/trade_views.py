@@ -19,6 +19,11 @@ class TradeListApi(Resource):
 
         results = schema.dump(trades_query, many=True)
         return {"trades": results}
+   
+    def delete(self):
+        trade=Trade()
+        results = trade.clear(Trade)
+        return {"trades": results}
 
     def post(self):
         # now_time = datetime.datetime.now()

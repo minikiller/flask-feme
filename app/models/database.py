@@ -26,6 +26,17 @@ class CRUD():
         return db.session.commit()
 
 
+    """
+        trade=Trade()
+        results = trade.clear(Trade)
+    """
+
+    def clear(self, resource):
+        # for all records
+        db.session.query(resource).delete()
+        return db.session.commit()
+
+
 # Create the validation for what we see as "not blank"
 NOT_BLANK = validate.Length(min=1, error='Field cannot be blank')
 PASSWORD_LENGTH = validate.Length(min=10, error='Password too short')

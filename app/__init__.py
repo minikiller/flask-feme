@@ -32,6 +32,10 @@ def create_app(environment='development'):
             create_test_models()
         if db.session.query(Setting).count() == 0:
             create_settings_models()
+        if db.session.query(Trade).count() == 0:
+            create_trade_models()
+
+        
 
 
     @app.after_request
@@ -61,17 +65,7 @@ def create_app(environment='development'):
 
 def create_trade_models():
     # # Create a couple of dogs and tie them to owners
-    trade = Trade()
-    trade.symbol = 'FMG3-DEC20'
-    trade.strikePrice = 10.00
-    trade.lowLimitPrice = 9.00
-    trade.highLimitPrice = 20.00
-    trade.tradingReferencePrice = 29.00
-    trade.securityID = '001'
-    trade.cfiCode = '001'
-    trade.activationDate = "20210201-22:30:00.00"
-    trade.lastEligibleTradeDate = "20210201-22:30:00.00"
-    trade.add(trade)
+    
   
     trade = Trade()
     trade.symbol = 'FMG3-MAR21'
@@ -79,7 +73,7 @@ def create_trade_models():
     trade.lowLimitPrice = 9.00
     trade.highLimitPrice = 20.00
     trade.tradingReferencePrice = 29.00
-    trade.securityID = '002'
+    trade.securityID = '186759'
     trade.cfiCode = '001'
     trade.activationDate = "20210201-22:30:00.00"
     trade.lastEligibleTradeDate = "20210201-22:30:00.00"
@@ -91,7 +85,7 @@ def create_trade_models():
     trade.lowLimitPrice = 9.00
     trade.highLimitPrice = 20.00
     trade.tradingReferencePrice = 29.00
-    trade.securityID = '003'
+    trade.securityID = '85510'
     trade.cfiCode = '001'
     trade.activationDate = "20210201-22:30:00.00"
     trade.lastEligibleTradeDate = "20210201-22:30:00.00"
@@ -103,43 +97,19 @@ def create_trade_models():
     trade.lowLimitPrice = 9.00
     trade.highLimitPrice = 20.00
     trade.tradingReferencePrice = 29.00
-    trade.securityID = '004'
+    trade.securityID = '29267'
     trade.cfiCode = '003'
     trade.activationDate = "20210201-22:30:00.00"
     trade.lastEligibleTradeDate = "20210201-22:30:00.00"
     trade.add(trade)
 
     trade = Trade()
-    trade.symbol = 'FMG3-DEC20-MAR21'
+    trade.symbol = 'FMG3-DEC21'
     trade.strikePrice = 10.00
     trade.lowLimitPrice = 9.00
     trade.highLimitPrice = 20.00
     trade.tradingReferencePrice = 29.00
-    trade.securityID = '005'
-    trade.cfiCode = '001'
-    trade.activationDate = "20210201-22:30:00.00"
-    trade.lastEligibleTradeDate = "20210201-22:30:00.00"
-    trade.add(trade)
-
-    trade = Trade()
-    trade.symbol = 'FMG3-DEC20-JUN21'
-    trade.strikePrice = 10.00
-    trade.lowLimitPrice = 9.00
-    trade.highLimitPrice = 20.00
-    trade.tradingReferencePrice = 29.00
-    trade.securityID = '006'
-    trade.cfiCode = '001'
-    trade.activationDate = "20210201-22:30:00.00"
-    trade.lastEligibleTradeDate = "20210201-22:30:00.00"
-    trade.add(trade)
-
-    trade = Trade()
-    trade.symbol = 'FMG3-DEC20-SEP21'
-    trade.strikePrice = 10.00
-    trade.lowLimitPrice = 9.00
-    trade.highLimitPrice = 20.00
-    trade.tradingReferencePrice = 29.00
-    trade.securityID = '007'
+    trade.securityID = '51390'
     trade.cfiCode = '001'
     trade.activationDate = "20210201-22:30:00.00"
     trade.lastEligibleTradeDate = "20210201-22:30:00.00"
@@ -151,7 +121,7 @@ def create_trade_models():
     trade.lowLimitPrice = 9.00
     trade.highLimitPrice = 20.00
     trade.tradingReferencePrice = 29.00
-    trade.securityID = '008'
+    trade.securityID = '84783'
     trade.cfiCode = '001'
     trade.activationDate = "20210201-22:30:00.00"
     trade.lastEligibleTradeDate = "20210201-22:30:00.00"
@@ -163,7 +133,19 @@ def create_trade_models():
     trade.lowLimitPrice = 9.00
     trade.highLimitPrice = 20.00
     trade.tradingReferencePrice = 29.00
-    trade.securityID = '009'
+    trade.securityID = '28128'
+    trade.cfiCode = '001'
+    trade.activationDate = "20210201-22:30:00.00"
+    trade.lastEligibleTradeDate = "20210201-22:30:00.00"
+    trade.add(trade)
+
+    trade = Trade()
+    trade.symbol = 'FMG3-MAR21-DEC21'
+    trade.strikePrice = 10.00
+    trade.lowLimitPrice = 9.00
+    trade.highLimitPrice = 20.00
+    trade.tradingReferencePrice = 29.00
+    trade.securityID = '49249'
     trade.cfiCode = '001'
     trade.activationDate = "20210201-22:30:00.00"
     trade.lastEligibleTradeDate = "20210201-22:30:00.00"
@@ -175,7 +157,31 @@ def create_trade_models():
     trade.lowLimitPrice = 9.00
     trade.highLimitPrice = 20.00
     trade.tradingReferencePrice = 29.00
-    trade.securityID = '010'
+    trade.securityID = '28856'
+    trade.cfiCode = '001'
+    trade.activationDate = "20210201-22:30:00.00"
+    trade.lastEligibleTradeDate = "20210201-22:30:00.00"
+    trade.add(trade)
+
+    trade = Trade()
+    trade.symbol = 'FMG3-JUN21-DEC21'
+    trade.strikePrice = 10.00
+    trade.lowLimitPrice = 9.00
+    trade.highLimitPrice = 20.00
+    trade.tradingReferencePrice = 29.00
+    trade.securityID = '51883'
+    trade.cfiCode = '001'
+    trade.activationDate = "20210201-22:30:00.00"
+    trade.lastEligibleTradeDate = "20210201-22:30:00.00"
+    trade.add(trade)
+
+    trade = Trade()
+    trade.symbol = 'FMG3-SEP21-DEC21'
+    trade.strikePrice = 10.00
+    trade.lowLimitPrice = 9.00
+    trade.highLimitPrice = 20.00
+    trade.tradingReferencePrice = 29.00
+    trade.securityID = '48555'
     trade.cfiCode = '001'
     trade.activationDate = "20210201-22:30:00.00"
     trade.lastEligibleTradeDate = "20210201-22:30:00.00"
@@ -233,7 +239,6 @@ def create_test_models():
 
     # Save changes
     db.session.commit()
-    create_trade_models()
     # create_settings_models()
 
 
