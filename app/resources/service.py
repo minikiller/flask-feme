@@ -61,6 +61,11 @@ class MDStartService(Resource):
 class MDStopService(Resource):
     # @jwt_required()
     def get(self):
+        out=exec_cli('ps -ef |grep JavaProgramName |awk '{print $2}'| grep -v grep |xargs kill -15')
+        if "Error" in out or '错误' in out: 
+            _status='0'
+        else: 
+            _status="1"
         _status = "on"
         return {"status" : _status}
 
@@ -68,12 +73,21 @@ class MDStopService(Resource):
 class MEStartService(Resource):
     # @jwt_required()
     def get(self):
-        _status = "on"
-        return {"status" : _status}
+        #out=exec_cli('ls -aslh .')
+        out=exec_cli('java -cp ~/Project/9999-futures/ccme/matchingengine/target/ccme-mathcingengine-2.2.0-standalone.jar  quickfix.examples.ordermatch.MatchingEngine')
+        if "Error" in out or '错误' in out: 
+            _status='0'
+        else: 
+            _status="1"
+        return {"status" : _status , "output": out }
 
 #停止ME
 class MEStopService(Resource):
-    # @jwt_required()
     def get(self):
+        out=exec_cli('ps -ef |grep JavaProgramName |awk '{print $2}'| grep -v grep |xargs kill -15')
+        if "Error" in out or '错误' in out: 
+            _status='0'
+        else: 
+            _status="1"
         _status = "on"
         return {"status" : _status}
