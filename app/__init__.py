@@ -3,6 +3,7 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 from app.models.base import db
 from app.models.database import user_datastore, User
 from app.models.trade import Trade
+from app.models.setting import Setting
 from .factory import Factory
 from flask_security.utils import encrypt_password
 
@@ -29,6 +30,8 @@ def create_app(environment='development'):
     def bootstrap_app():
         if db.session.query(User).count() == 0:
             create_test_models()
+        if db.session.query(Setting).count() == 0:
+            create_settings_models()
 
 
     @app.after_request
@@ -179,6 +182,24 @@ def create_trade_models():
     trade.add(trade)
 
 
+def create_settings_models():
+    # # Create a couple of dogs and tie them to owners
+    setting = Setting()
+    setting.name = "InstrumentName"
+    setting.value = "FMG3"
+    setting.type = "String"
+    setting.comment = "Instrument Name, split by ','"
+    setting.application = "Market Data"
+    setting.add(setting)
+
+    setting = Setting()
+    setting.name = "InstrumentDate"
+    setting.value = "DEC20,MAR21,JUN21,SEP21"
+    setting.comment = "Instrument Date, split by ','"
+    setting.type = "String"
+    setting.application = "Market Data"
+    setting.add(setting)
+
 def create_test_models():
     # Create the default roles
     basic = user_datastore.find_or_create_role(
@@ -213,6 +234,7 @@ def create_test_models():
     # Save changes
     db.session.commit()
     create_trade_models()
+    # create_settings_models()
 
 
 

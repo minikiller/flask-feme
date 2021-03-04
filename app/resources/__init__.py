@@ -3,6 +3,7 @@ from ..utils import PatchedApi
 from flask_restful import Api
 from flask import Blueprint
 from .trade_views import TradeListApi, TradeApi
+from .setting_views import SettingListApi, SettingApi
 from .user import UserList, UserUpdate
 from .role import RoleList, RoleUpdate
 from .service import ListService, MDStartService, MDStopService, MEStartService, MEStopService
@@ -28,6 +29,11 @@ def initialize_roles(api):
     api.add_resource(RoleUpdate, '/role/<int:id>')
 
 
+def initialize_settings(api):
+    # Roles
+    api.add_resource(SettingListApi, '/settings')
+    api.add_resource(SettingApi, '/setting/<int:setting_id>')
+
 def initialize_service(api):
     # service
     api.add_resource(ListService, '/ListService')
@@ -40,4 +46,5 @@ def initialize_api(api):
     initialize_users(api)
     initialize_roles(api)
     initialize_trades(api)
+    initialize_settings(api)
     initialize_service(api)

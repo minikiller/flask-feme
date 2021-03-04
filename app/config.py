@@ -46,6 +46,10 @@ class Config:
     SECURITY_PASSWORD_SALT = 'add_salt'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+    FEME_CONFIG_PATH=''
+    FEMD_CONFIG_PATH =''
+
+
 
 class DevConfig(Config):
     basedir = os.path.abspath(os.path.dirname(__file__))
