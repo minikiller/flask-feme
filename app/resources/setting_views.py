@@ -1,5 +1,5 @@
 from flask_restful import Resource
-from app.models.trade import Trade, TradeSchema
+from app.models.setting import Setting,SettingSchema
 from flask import request, jsonify, make_response
 from marshmallow import ValidationError
 from sqlalchemy.exc import SQLAlchemyError
@@ -9,21 +9,16 @@ import json
 
 # http://marshmallow.readthedocs.org/en/latest/quickstart.html#declaring-schemas
 # https://github.com/marshmallow-code/marshmallow-jsonapi
-schema = TradeSchema()
+schema = SettingSchema()
 # schema = TradeSchema(include_data=('owner',))
 
 
-class TradeListApi(Resource):
+class SettingListApi(Resource):
     def get(self):
-        trades_query = Trade.query.all()
+        setting_query = Setting.query.all()
 
-        results = schema.dump(trades_query, many=True)
-        return {"trades": results}
-   
-    def delete(self):
-        trade=Trade()
-        results = trade.clear(Trade)
-        return {"trades": results}
+        results = schema.dump(setting_query, many=True)
+        return {"settings": results}
 
     def post(self):
         # now_time = datetime.datetime.now()
@@ -31,13 +26,13 @@ class TradeListApi(Resource):
         try:
             # Validate Data
             schema.validate(raw_dict)
-            trade = Trade()
-            trade_dict = raw_dict
-            for key, value in trade_dict.items():
+            setting = Setting()
+            setting_dict = raw_dict
+            for key, value in setting_dict.items():
 
-                setattr(trade, key, value)
+                setattr(setting, key, value)
 
-            trade.add(trade)
+            setting.add(setting)
 
             # Return the new dog information
             # query = Trade.query.get(trade.id)
@@ -59,8 +54,8 @@ class TradeListApi(Resource):
             return resp
 
 
-class TradeApi(Resource):
-    def get(self, trade_id):
+class SettingApi(Resource):
+    def get(self, setting_id):
         '''
         http://jsonapi.org/format/#fetching
         A server MUST respond to a successful request to fetch an individual resource or resource collection with
@@ -70,11 +65,11 @@ class TradeApi(Resource):
         exist, except when the request warrants a 200 OK response with null as the primary data (as described above)
         a self link as part of the top-level links object
         '''
-        trade_query = Trade.query.get_or_404(trade_id)
-        result = schema.dump(trade_query)
+        setting_query = Setting.query.get_or_404(setting_id)
+        result = schema.dump(setting_query)
         return result
 
-    def put(self, trade_id):
+    def put(self, setting_id):
         '''
         http://jsonapi.org/format/#crud-updating
         The PATCH request MUST include a single resource object as primary data. The resource object MUST contain
@@ -90,17 +85,17 @@ class TradeApi(Resource):
 
         A server MUST return 404 Not Found when processing a request to modify a resource that does not exist.
         '''
-        trade = Trade.query.get_or_404(trade_id)
+        setting = Setting.query.get_or_404(setting_id)
         raw_dict = request.get_json(force=True)
 
         try:
             # schema.validate(raw_dict)
-            trade_dict = raw_dict
-            for key, value in trade_dict.items():
+            setting_dict = raw_dict
+            for key, value in setting_dict.items():
 
-                setattr(trade, key, value)
+                setattr(setting, key, value)
 
-            trade.update()
+            setting.update()
             response = jsonify({"code": 1})
             response.status_code = 200
             return response
@@ -116,14 +111,14 @@ class TradeApi(Resource):
             resp.status_code = 401
             return resp
 
-    def delete(self, trade_id):
+    def delete(self, setting_id):
         '''
         http://jsonapi.org/format/#crud-deleting
         A server MUST return a 204 No Content status code if a deletion request is successful and no content is returned.
         '''
-        trade = Trade.query.get_or_404(trade_id)
+        setting = Setting.query.get_or_404(setting_id)
         try:
-            delete = trade.delete(trade)
+            delete = setting.delete(setting)
             response = jsonify({"code": 1})
             response.status_code = 200
             return response
