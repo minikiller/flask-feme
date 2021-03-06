@@ -28,11 +28,11 @@ PS_EF_ME='ps -ef |grep \'java -cp\' |grep '+ ME_Name + ' |wc -l'
 
 Start_MD='nohup java -cp  ' + MD_jar_path + ' quickfix.examples.executor.MarketDataServer'
 Stop_MD='ps -ef |grep ' + MD_jar + ' |awk \'{print $2}\'| grep -v grep |xargs kill -15'
-_Stop_MD='ps -ef |grep ' + MD_jar + ' |awk \'{print $2}\' |wc -l'
+check_kill_MD='ps -ef |grep ' + MD_jar + ' |awk \'{print $2}\' |wc -l'
 
 Start_ME='nohup java -cp ' + ME_jar_path + ' quickfix.examples.ordermatch.MatchingEngine'
 Stop_ME='ps -ef |grep ' + ME_jar + ' |awk \'{print $2}\'| grep -v grep |xargs kill -15'
-_Stop_ME='ps -ef |grep ' + ME_jar + ' |awk \'{print $2}\' |wc -l'
+check_kill_ME='ps -ef |grep ' + ME_jar + ' |awk \'{print $2}\' |wc -l'
 
 
 """
@@ -138,7 +138,7 @@ class MDStopService(Resource):
     # @jwt_required()
     def get(self):
         out=exec_cli(Stop_MD)
-        _out=exec_cli(_Stop_MD)
+        _out=exec_cli(check_kill_MD)
         
         if int(_out) ==1: 
             _status='1'
@@ -169,7 +169,7 @@ class MEStartService(Resource):
 class MEStopService(Resource):
     def get(self):
         out=exec_cli(Stop_ME)
-        _out=exec_cli(_Stop_ME)
+        _out=exec_cli(check_kill_ME)
         
         if int(_out) ==1: 
             _status='1'
