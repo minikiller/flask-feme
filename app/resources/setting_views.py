@@ -4,7 +4,7 @@ from flask import request, jsonify, make_response
 from marshmallow import ValidationError
 from sqlalchemy.exc import SQLAlchemyError
 from app.models.database import db
-import json
+from app.utils import set_config
 
 
 # http://marshmallow.readthedocs.org/en/latest/quickstart.html#declaring-schemas
@@ -90,12 +90,14 @@ class SettingApi(Resource):
 
         try:
             # schema.validate(raw_dict)
+            set_config(setting.application, setting.name, setting.value,raw_dict['value'])
             setting_dict = raw_dict
             for key, value in setting_dict.items():
 
                 setattr(setting, key, value)
 
             setting.update()
+            
             response = jsonify({"code": 1})
             response.status_code = 200
             return response

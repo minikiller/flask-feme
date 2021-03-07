@@ -3,7 +3,6 @@ from functools import wraps
 from flask import url_for, current_app, request, Response, Blueprint
 from flask_restplus import Api
 
-
 def add_basic_auth(blueprint: Blueprint, username, password, realm='api'):
     """
     Add HTTP Basic Auth to a blueprint.
@@ -63,3 +62,33 @@ class PatchedApi(Api):
         if current_app.config['TESTING'] or current_app.config['APP_ENVIRONMENT'] == 'development':
             print(e)
         super().handle_error(e)
+
+
+"""
+设置配置文件内容
+"""
+
+def set_config(application, key, oldvalue, value):
+    if application == 'Market Data':
+        path = current_app.config['FEMD_CONFIG_PATH']
+    else:
+        path = current_app.config['FEME_CONFIG_PATH']
+
+    # read input file
+    fin = open(path, "rt")
+    # read file contents to string
+    data = fin.read()
+    # replace all occurrences of the required string
+    data = data.replace(key+"="+oldvalue, key+"="+value)
+    # close the input file
+    fin.close()
+    # open the input file in write mode
+    fin = open(path, "wt")
+    # overrite the input file with the resulting data
+    fin.write(data)
+    # close the file
+    fin.close()
+
+
+if __name__ == '__main__':
+    set_config("InstrumentName", "FMG3", "FMG$")

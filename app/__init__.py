@@ -16,9 +16,13 @@ def create_app(environment='development'):
     f.set_api()
     f.set_security()
 
+
     # from models import Example
 
     app = f.flask
+
+    print("testing is ", app.config['FEME_CONFIG_PATH'])
+
 
     if app.config['TESTING']:  # pragma: no cover
         # Setup app for testing
