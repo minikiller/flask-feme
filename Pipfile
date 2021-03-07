@@ -46,6 +46,7 @@ Werkzeug = "==0.16.1"
 flask-jwt = "*"
 email-validator = "*"
 flask-security = "*"
+configparser = "*"
 
 [dev-packages]
 

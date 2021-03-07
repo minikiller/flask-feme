@@ -5,13 +5,6 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: test",
-            "type": "python",
-            "request": "launch",
-            "program": "app/example/test.py",
-            "console": "integratedTerminal"
-        },
-        {
             "name": "Python: flask",
             "type": "python",
             "request": "launch",

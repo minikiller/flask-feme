@@ -5,11 +5,47 @@ from flask_jwt import jwt_required, current_identity
 import os
 import subprocess
 
+
+# 读取配置文件site.ini，用来配置进程名，程序包版本名
+import configparser
+config = configparser.ConfigParser()
+filename=config.read('/Users/mclitao/Project/6666-admin/flask-feme/app/resources/site.ini',encoding='utf-8')
+print(filename)
+
+secs=config.sections()
+sec = config.options("SHELLCLI")
+
+MD_Name=config.get('SHELLCLI','MD_Name')
+ME_Name=config.get('SHELLCLI','ME_Name')
+MD_jar=config.get('SHELLCLI','MD_jar')
+ME_jar=config.get('SHELLCLI','ME_jar')
+MD_jar_path=config.get('SHELLCLI','MD_jar_path')
+ME_jar_path=config.get('SHELLCLI','ME_jar_path')
+
+
+PS_EF_MD='ps -ef |grep \'java -cp\' |grep ' + MD_Name + '|wc -l'
+PS_EF_ME='ps -ef |grep \'java -cp\' |grep '+ ME_Name + ' |wc -l'
+
+Start_MD='nohup java -cp  ' + MD_jar_path + ' quickfix.examples.executor.MarketDataServer'
+Stop_MD='ps -ef |grep ' + MD_jar + ' |awk \'{print $2}\'| grep -v grep |xargs kill -15'
+check_kill_MD='ps -ef |grep ' + MD_jar + ' |awk \'{print $2}\' |wc -l'
+
+Start_ME='nohup java -cp ' + ME_jar_path + ' quickfix.examples.ordermatch.MatchingEngine'
+Stop_ME='ps -ef |grep ' + ME_jar + ' |awk \'{print $2}\'| grep -v grep |xargs kill -15'
+check_kill_ME='ps -ef |grep ' + ME_jar + ' |awk \'{print $2}\' |wc -l'
+
+
 """
 服务器脚本命令
+<<<<<<< HEAD
 """
 PS_EF_MD = 'ps -ef |grep \'java -cp\' |grep quickfix.examples.executor.MarketDataServer |wc -l'
 PS_EF_ME = 'ps -ef |grep \'java -cp\' |grep quickfix.examples.ordermatch.MatchingEngine |wc -l'
+=======
+
+PS_EF_MD='ps -ef |grep \'java -cp\' |grep quickfix.examples.executor.MarketDataServer |wc -l'
+PS_EF_ME='ps -ef |grep \'java -cp\' |grep quickfix.examples.ordermatch.MatchingEngine |wc -l'
+>>>>>>> 1b735138a35ca69729596ddb8d77224e95a2a8d4
 
 Start_MD = 'nohup java -cp  /Users/mclitao/Project/9999-futures/ccme/marketdata/target/ccme-marketdata-2.2.0-standalone.jar quickfix.examples.executor.MarketDataServer'
 Stop_MD = 'ps -ef |grep ccme-marketdata-2.2.0-standalone |awk \'{print $2}\'| grep -v grep |xargs kill -15'
@@ -20,7 +56,6 @@ Stop_ME = 'ps -ef |grep ccme-mathcingengine-2.2.0-standalone |awk \'{print $2}\'
 Check_Stop_ME = 'ps -ef |grep ccme-mathcingengine-2.2.0-standalone |awk \'{print $2}\' |wc -l'
 
 
-"""
 MD服务端口
  mclitao@TaodeMacBook-Pro  ~  lsof -i :9880
 COMMAND   PID    USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
@@ -38,12 +73,19 @@ java    49290 mclitao   49u  IPv6 0x3eacc9edad365913      0t0  TCP *:8323 (LISTE
 # 负责执行CLI命令,并返回结果
 def exec_cli(_cmd):
     try:
+<<<<<<< HEAD
         # os.system：获取程序执行命令的返回值。
         # os.popen： 获取程序执行命令的输出结果。
+=======
+        #os.system：获取程序执行命令的返回值。
+        #os.popen： 获取程序执行命令的输出结果。
+        print(_cmd)
+>>>>>>> 1b735138a35ca69729596ddb8d77224e95a2a8d4
         val = os.popen(_cmd)
         out = val.read()
     except:
         out = 'Error'
+        print('exec shell stript Error!!')
 
     return out
     
@@ -62,8 +104,13 @@ class ListService(Resource):
     # @jwt_required()
     def get(self):
 
+<<<<<<< HEAD
         # MD服务检查
         mdout = exec_cli(PS_EF_MD)
+=======
+        # MD服务检查'
+        mdout=exec_cli(PS_EF_MD)
+>>>>>>> 1b735138a35ca69729596ddb8d77224e95a2a8d4
         try:
             if int(mdout) > 1:
                 _mdStatus = 1
@@ -83,11 +130,18 @@ class ListService(Resource):
         except:
             _meStatus = 0
 
+<<<<<<< HEAD
         # 返回2个服务的真实状态
         return jsonify({'MD': _mdStatus, "ME": _meStatus})
 
 
 # 启动MD
+=======
+        # 返回2个服务的真实状态   
+        return jsonify({'MD':_mdStatus,"ME":_meStatus})
+        
+#启动MD
+>>>>>>> 1b735138a35ca69729596ddb8d77224e95a2a8d4
 class MDStartService(Resource):
     # @jwt_required()
     """
@@ -116,6 +170,7 @@ class MDStartService(Resource):
 class MDStopService(Resource):
     # @jwt_required()
     def get(self):
+<<<<<<< HEAD
         out = exec_cli(Stop_MD)
         _out = exec_cli(Check_Stop_MD)
 
@@ -129,6 +184,19 @@ class MDStopService(Resource):
 # 启动ME
 
 
+=======
+        out=exec_cli(Stop_MD)
+        _out=exec_cli(check_kill_MD)
+        
+        if int(_out) ==1: 
+            _status='1'
+        else: 
+            _status="0"
+        
+        return {"status" : _status}
+
+#启动ME
+>>>>>>> 1b735138a35ca69729596ddb8d77224e95a2a8d4
 class MEStartService(Resource):
     # @jwt_required()
     def get(self):
@@ -152,6 +220,7 @@ class MEStartService(Resource):
 
 class MEStopService(Resource):
     def get(self):
+<<<<<<< HEAD
         out = exec_cli(Stop_ME)
         _out = exec_cli(Check_Stop_ME)
 
@@ -161,3 +230,14 @@ class MEStopService(Resource):
             _status = "0"
 
         return {"status": _status}
+=======
+        out=exec_cli(Stop_ME)
+        _out=exec_cli(check_kill_ME)
+        
+        if int(_out) ==1: 
+            _status='1'
+        else: 
+            _status="0"
+                
+        return {"status" : _status}
+>>>>>>> 1b735138a35ca69729596ddb8d77224e95a2a8d4
