@@ -9,7 +9,13 @@ import subprocess
 # 读取配置文件site.ini，用来配置进程名，程序包版本名
 import configparser
 config = configparser.ConfigParser()
-filename=config.read('/Users/mclitao/Project/6666-admin/flask-feme/app/resources/site.ini',encoding='utf-8')
+
+#生产时路径,本机测试开发注销掉
+
+# os.chdir("/usr/src/app")
+# print('web base dir:',"/usr/src/app")
+
+filename=config.read('app/resources/site.ini',encoding='utf-8')
 print(filename)
 
 secs=config.sections()

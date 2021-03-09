@@ -126,3 +126,8 @@ flask-jwt: current_identity
 ### Heroku deployment - One Click Deploy
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/minikiller/flask-feme)
+
+### Pressure test
+```
+ab -n 500 -c 500 http://localhost:8000/
+```
