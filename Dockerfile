@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 COPY requirements.txt /usr/src/app/requirements.txt
 RUN pip install --no-cache-dir gunicorn && pip install --no-cache-dir -r /usr/src/app/requirements.txt
 
-
+# 如果gunicorn启用grevent模式时需要安装这个包
 RUN pip install -U --force-reinstall --no-binary :all: gevent
 
 COPY . /usr/src/app
