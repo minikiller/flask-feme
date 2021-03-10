@@ -6,27 +6,32 @@ python:
 services:
   - docker
 
+env:
+  - DOCKER_USERNAME=mclitao
+  - DOCKER_PASSWORD=123456
+
 before_install:
 
 install:
   # - pip install -r requirements.txt
 
 script:
-
+  - ls -als .
 jobs:
   include:
     #-----------ci-task----------------------------
     - stage: clear docker images
       script:
-        - docker rmi $(docker images | grep "none" | awk '{print $3}')
-        - docker ps -a | grep "Exited" | awk '{print $1 }'|xargs docker rm
+        # - docker rmi $(docker images | grep "none" | awk '{print $3}')
+        # - docker ps -a | grep "Exited" | awk '{print $1 }'|xargs docker rm
+        - docker images
 
     - stage: build docker images
       script:
         - echo "$DOCKER_PASSWORD" | docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" 
         #-echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
         - docker build -t flask-feme .
-        - docker images
+
     - stage: push image to mclitao/resitry1-pub
       script:
         - docker push mclitao/resitry1-pub:flask-feme-latest
