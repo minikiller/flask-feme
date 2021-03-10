@@ -6,17 +6,13 @@ python:
 services:
   - docker
 
-env:
-  - DOCKER_USERNAME=mclitao
-  - DOCKER_PASSWORD=mcc123456
-
 before_install:
 
 install:
   # - pip install -r requirements.txt
 
 script:
-  - echo "ls -als .
+  - echo ls -als .
 jobs:
   include:
     #-----------ci-task----------------------------
