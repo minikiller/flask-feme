@@ -22,15 +22,15 @@ jobs:
         # - docker ps -a | grep "Exited" | awk '{print $1 }'|xargs docker rm
         - docker images
 
-    - stage: build docker images
+    - stage: build docker images and push to registry
       script:
-        - echo "$DOCKER_PASSWORD" | docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" 
-        #-echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        # - echo "$DOCKER_PASSWORD" | docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" 
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
         - docker build -t flask-feme .
-
-    - stage: push image to mclitao/resitry1-pub
-      script:
+        - docker tag flask-feme:latest mclitao/resitry1-pub:flask-feme-latest
         - docker push mclitao/resitry1-pub:flask-feme-latest
+
+        
     #------------cd-task--------------------------
     # dev-test
     - stage: run object Project on server baremal or vm and docker
