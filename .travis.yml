@@ -29,8 +29,6 @@ jobs:
         - docker build -t flask-feme .
         - docker tag flask-feme:latest mclitao/resitry1-pub:flask-feme-latest
         - docker push mclitao/resitry1-pub:flask-feme-latest
-
-        
     #------------cd-task--------------------------
     # dev-test
     - stage: run object Project on server baremal or vm and docker
