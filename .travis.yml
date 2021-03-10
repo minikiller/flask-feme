@@ -1,34 +1,39 @@
+#语言决定这你的CI过程容器环境
 language: python
 
 python:
   - "3.8.6"
 
+#CI处理过程承载的方式为docker容器
 services:
   - docker
 
 before_install:
 
 install:
+  # 所有语言都有自己的规范包管理模式，此处使用python所以下面的代码不需要，会自动执行的。
   # - pip install -r requirements.txt
 
 script:
   - echo ls -als .
+
+#CI/CD任务分包，编译、测试、发布等任务。  
+#整个CI工作都会由Travis替你使用它自身的算力网络存储完成工作！！！
 jobs:
   include:
     #-----------ci-task----------------------------
+    # build
     - stage: clear docker images
       script:
-        # - docker rmi $(docker images | grep "none" | awk '{print $3}')
-        # - docker ps -a | grep "Exited" | awk '{print $1 }'|xargs docker rm
         - docker images
-
     - stage: build docker images and push to registry
       script:
       #此处账户密码可以放在ENV中或到Travis后台配置一下也可以。
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
         - docker build -t flask-feme .
         - docker tag flask-feme:latest mclitao/flask-feme:latest
-        - docker push mclitao/resitry1-pub:flask-feme-latest
+        - docker push mclitao/flask-feme:latest
+
     #------------cd-task--------------------------
     # dev-test
     - stage: run object Project on server baremal or vm and docker
@@ -36,9 +41,12 @@ jobs:
         - echo "docker pull ....."
         - echo "docker rm ......"
         - echo "docker run -p 8000:8000 --rm -it flask-feme"
-    # production
+
+    # production Deplory
     - stage: run object Project on server baremal or vm and docker
       script:
+        # - docker rmi $(docker images | grep "none" | awk '{print $3}')
+        # - docker ps -a | grep "Exited" | awk '{print $1 }'|xargs docker rm
         - echo "docker pull ....."
         - echo "docker rm ......"
         - echo "docker run -p 8000:8000 --rm -it flask-feme"
