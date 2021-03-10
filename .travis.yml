@@ -1,0 +1,45 @@
+language: python
+
+python:
+  - "3.8.6"
+
+services:
+  - docker
+
+before_install:
+
+install:
+  # - pip install -r requirements.txt
+
+script:
+
+jobs:
+  include:
+    #-----------ci-task----------------------------
+    - stage: clear docker images
+      script:
+        - docker rmi $(docker images | grep "none" | awk '{print $3}')
+        - docker ps -a | grep "Exited" | awk '{print $1 }'|xargs docker rm
+
+    - stage: build docker images
+      script:
+        - echo "$DOCKER_PASSWORD" | docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" 
+        #-echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        - docker build -t flask-feme .
+        - docker images
+    - stage: push image to mclitao/resitry1-pub
+      script:
+        - docker push mclitao/resitry1-pub:flask-feme-latest
+    #------------cd-task--------------------------
+    # dev-test
+    - stage: run object Project on server baremal or vm and docker
+      script:
+        - echo "docker pull ....."
+        - echo "docker rm ......"
+        - echo "docker run -p 8000:8000 --rm -it flask-feme"
+    # production
+    - stage: run object Project on server baremal or vm and docker
+      script:
+        - echo "docker pull ....."
+        - echo "docker rm ......"
+        - echo "docker run -p 8000:8000 --rm -it flask-feme"
