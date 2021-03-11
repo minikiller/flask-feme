@@ -1,4 +1,4 @@
-#语言决定这你的CI过程容器环境
+#语言决定这你的CI过程容器环境,代码都是自动被git clone进去的
 language: python
 
 python:
@@ -8,14 +8,64 @@ python:
 services:
   - docker
 
+
+env:
+   gloabl:
+   - 'remoute_user=mclitao'
+   - 'remoute_pass=123456'
+   - 'user_key='
+
+
+
+
+dist: trusty
+sudo: false
+addons:
+  ssh_known_hosts:
+  #阿里服务器-孙哥
+  - "39.104.54.42"
+
+#找一台机器给travis做一个专属密钥,将public公钥放到travis上
+#ssh-keygen -t rsa -b 4096 -C 'build@travis-ci.org' -f ./deploy_rsa
+# 到travis 对应项目下建立一个变量encrypt-file存放 deploy_rsa,或用下面命令添加
+#travis encrypt-file deploy_rsa --add
+#ssh-copy-id -i deploy_rsa.pub <ssh-user>@<deploy-host>
+
+
+
+#安装前本机做密钥，和部署机通信用
 before_install:
+  - openssl aes-256-cbc -K $encrypted_db2095f63ba3_key -iv $encrypted_db2095f63ba3_iv
+  -in .travis/deploy_rsa.enc -out .travis/id_rsa -d
+  - eval "$(ssh-agent -s)"
+  - cp .travis/id_rsa ~/.ssh/deploy_rsa
+  - chmod 600 ~/.ssh/deploy_rsa
+  - ssh-add ~/.ssh/deploy_rsa
+  #安装docker for ubunt
+  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+  - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+  - sudo apt-get update
+  - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
+addons:
+  apt:
+    #添加相关包
+    packages:
+      - docker-ce
+
+  - provider: script
+    skip_cleanup: true
+    script: bash .travis/deploy.sh
+    verbose: true
+    on:
+      branch: main
+
 
 install:
   # 所有语言都有自己的规范包管理模式，此处使用python所以下面的代码不需要，会自动执行的。
   # - pip install -r requirements.txt
 
 script:
-  - echo ls -als .
+  - ls -als .
 
 #CI/CD任务分包，编译、测试、发布等任务。  
 #整个CI工作都会由Travis替你使用它自身的算力网络存储完成工作！！！
