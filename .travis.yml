@@ -53,5 +53,5 @@ jobs:
         # - docker ps -a | grep "Exited" | awk '{print $1 }'|xargs docker rm
         - echo "docker pull ....."
         - echo "docker rm ......"
-        - docker run -p 8000:8000 --rm -it flask-feme
+        - docker run -p 8000:8000 --rm -it mclitao/flask-feme:latest
         - bash ./unit-tests.sh
