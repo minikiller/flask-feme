@@ -12,7 +12,7 @@ from app.models.trade import Trade
 
 
 def test_add_trade(db):
-    trade = Trade(name="hello", symbol="symbol")
+    trade = Trade(strikePrice=12.0, symbol="symbol")
     trade.add(trade)
 
     query = Trade.query.get(trade.id)
@@ -20,7 +20,7 @@ def test_add_trade(db):
 
 
 def test_delete_trade(db):
-    trade = Trade(name="hello1", symbol="symbol1")
+    trade = Trade(strikePrice=12.0, symbol="symbol1")
     trade.add(trade)
 
     query = Trade.query.get(trade.id)
