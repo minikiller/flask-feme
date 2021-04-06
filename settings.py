@@ -19,8 +19,8 @@ worker_class='gevent'
 debug=True  
 #监听本机的5000端口  
 bind='0.0.0.0:8000'
-workers = multiprocessing.cpu_count() * 2 + 1
-# workers = 1
+# workers = multiprocessing.cpu_count() * 2 + 1
+workers = 3
 #线程
 #threads=8000
 # keepalive=1
