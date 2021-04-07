@@ -3,42 +3,46 @@ from flask import request, jsonify, make_response
 import json
 from flask_jwt import jwt_required, current_identity
 import os
+import time
 import subprocess
-
 
 # 读取配置文件site.ini，用来配置进程名，程序包版本名
 import configparser
 config = configparser.ConfigParser()
 
-#生产时路径,本机测试开发注销掉
+# 生产时路径,本机测试开发注销掉
 
 # os.chdir("/usr/src/app")
 # print('web base dir:',"/usr/src/app")
 
-filename=config.read('app/resources/site.ini',encoding='utf-8')
+filename = config.read('app/resources/site.ini', encoding='utf-8')
 print(filename)
 
-secs=config.sections()
+secs = config.sections()
 sec = config.options("SHELLCLI")
 
-MD_Name=config.get('SHELLCLI','MD_Name')
-ME_Name=config.get('SHELLCLI','ME_Name')
-MD_jar=config.get('SHELLCLI','MD_jar')
-ME_jar=config.get('SHELLCLI','ME_jar')
-MD_jar_path=config.get('SHELLCLI','MD_jar_path')
-ME_jar_path=config.get('SHELLCLI','ME_jar_path')
+MD_Name = config.get('SHELLCLI', 'MD_Name')
+ME_Name = config.get('SHELLCLI', 'ME_Name')
+MD_jar = config.get('SHELLCLI', 'MD_jar')
+ME_jar = config.get('SHELLCLI', 'ME_jar')
+MD_jar_path = config.get('SHELLCLI', 'MD_jar_path')
+ME_jar_path = config.get('SHELLCLI', 'ME_jar_path')
 
 
-PS_EF_MD='ps -ef |grep \'java -cp\' |grep ' + MD_Name + '|wc -l'
-PS_EF_ME='ps -ef |grep \'java -cp\' |grep '+ ME_Name + ' |wc -l'
+PS_EF_MD = 'ps -ef |grep \'java -cp\' |grep ' + MD_Name + '|wc -l'
+PS_EF_ME = 'ps -ef |grep \'java -cp\' |grep ' + ME_Name + ' |wc -l'
 
-Start_MD='nohup java -cp  ' + MD_jar_path + ' quickfix.examples.executor.MarketDataServer'
-Stop_MD='ps -ef |grep ' + MD_jar + ' |awk \'{print $2}\'| grep -v grep |xargs kill -15'
-check_kill_MD='ps -ef |grep ' + MD_jar + ' |awk \'{print $2}\' |wc -l'
+Start_MD = 'nohup java -cp  ' + MD_jar_path + \
+    ' quickfix.examples.executor.MarketDataServer' + ' 2>&1 &'
+Stop_MD = 'ps -ef |grep ' + MD_jar + \
+    ' |awk \'{print $2}\'| grep -v grep |xargs kill -9'
+check_kill_MD = 'ps -ef |grep ' + MD_jar + ' |awk \'{print $2}\' |wc -l'
 
-Start_ME='nohup java -cp ' + ME_jar_path + ' quickfix.examples.ordermatch.MatchingEngine'
-Stop_ME='ps -ef |grep ' + ME_jar + ' |awk \'{print $2}\'| grep -v grep |xargs kill -15'
-check_kill_ME='ps -ef |grep ' + ME_jar + ' |awk \'{print $2}\' |wc -l'
+Start_ME = 'nohup java -cp ' + ME_jar_path + \
+    ' quickfix.examples.ordermatch.MatchingEngine' + ' 2>&1 &'
+Stop_ME = 'ps -ef |grep ' + ME_jar + \
+    ' |awk \'{print $2}\'| grep -v grep |xargs kill -9'
+check_kill_ME = 'ps -ef |grep ' + ME_jar + ' |awk \'{print $2}\' |wc -l'
 
 
 """
@@ -70,20 +74,33 @@ java    49290 mclitao   49u  IPv6 0x3eacc9edad365913      0t0  TCP *:8323 (LISTE
 """
 
 
+# def getProgramPid(_program):
+#     _program = 'standalone.jar'
+#     print("ps aux | grep java | grep %s | grep -v grep | awk '{print $2}'" % _program)
+#     result = commands.getoutput("ps aux | grep java | grep %s | grep -v grep | awk '{print $2}'" % _program)
+#     print(result)
+#     return result
+
+
 # 负责执行CLI命令,并返回结果
-def exec_cli(_cmd):
+def exec_cli(_cmd, _stae=0):
     try:
-        #os.system：获取程序执行命令的返回值。
-        #os.popen： 获取程序执行命令的输出结果。
+        # os.system：获取程序执行命令的返回值。
+        # os.popen： 获取程序执行命令的输出结果。
         print(_cmd)
+        # val = os.popen(_cmd)
         val = os.popen(_cmd)
-        out = val.read()
+        # 避免执行nohup时出现popen管道崩塌。
+        if _stae == 0:
+            out = val.read()
+        else:
+            out = ''
     except:
         out = 'Error'
         print('exec shell stript Error!!')
 
     return out
-    
+
 # 处理掉特殊字符
 
 
@@ -92,15 +109,13 @@ def change_str(out):
         '\n', '').replace('\t', '').replace(' ', '')
     return _str_s
 
+
 # 列出服务
-
-
 class ListService(Resource):
     # @jwt_required()
     def get(self):
-
         # MD服务检查'
-        mdout=exec_cli(PS_EF_MD)
+        mdout = exec_cli(PS_EF_MD)
         try:
             if int(mdout) > 1:
                 _mdStatus = 1
@@ -120,10 +135,11 @@ class ListService(Resource):
         except:
             _meStatus = 0
 
-        # 返回2个服务的真实状态   
-        return jsonify({'MD':_mdStatus,"ME":_meStatus})
-        
-#启动MD
+        # 返回2个服务的真实状态
+        return jsonify({'MD': _mdStatus, "ME": _meStatus})
+
+
+# 启动MD
 class MDStartService(Resource):
     # @jwt_required()
     """
@@ -134,35 +150,39 @@ class MDStartService(Resource):
         # 检查是否已经启动过
         out = exec_cli(PS_EF_MD)
         print(int(change_str(out)))
-
         if int(change_str(out)) > 1:
-            _status = '1'
+            _status = 1
         else:
             # 启动目标MD服务
-            out = exec_cli(Start_MD)
-            if "Error" in out or '错误' in out:
-                _status = '0'
+            out = exec_cli(Start_MD, 1)
+            time.sleep(2)
+            # MD服务检查'
+            mdout = exec_cli(PS_EF_MD)
+            if int(mdout) > 1:
+                _status = 1
+                out = ''
             else:
-                _status = "1"
-        return {"status": _status, "output": out}
+                _status = 0
+
+        return {"code": _status, "output": out}
+
 
 # 停止MD
-
-
 class MDStopService(Resource):
     # @jwt_required()
     def get(self):
-        out=exec_cli(Stop_MD)
-        _out=exec_cli(check_kill_MD)
-        
-        if int(_out) ==1: 
-            _status='1'
-        else: 
-            _status="0"
-        
-        return {"status" : _status}
+        out = exec_cli(Stop_MD)
+        _out = exec_cli(check_kill_MD)
 
-#启动ME
+        if int(_out) == 1:
+            _status = 0
+        else:
+            _status = 1
+
+        return {"code": _status}
+
+
+# 启动ME
 class MEStartService(Resource):
     # @jwt_required()
     def get(self):
@@ -171,27 +191,30 @@ class MEStartService(Resource):
         print(change_str(out))
 
         if int(change_str(out)) > 1:
-            _status = '1'
+            _status = 1
         else:
-            out = exec_cli(Start_ME)
-
-            if "Error" in out or '错误' in out:
-                _status = '0'
+            # 启动ME服务程序
+            out = exec_cli(Start_ME, 1)
+            time.sleep(2)
+            # ME服务检查'
+            mdout = exec_cli(PS_EF_ME)
+            if int(mdout) > 1:
+                _status = 1
+                out = ''
             else:
-                _status = "1"
-        return {"status": _status, "output": out}
+                _status = 0
+        return {"code": _status, "output": out}
+
 
 # 停止ME
-
-
 class MEStopService(Resource):
     def get(self):
-        out=exec_cli(Stop_ME)
-        _out=exec_cli(check_kill_ME)
-        
-        if int(_out) ==1: 
-            _status='1'
-        else: 
-            _status="0"
-                
-        return {"status" : _status}
+        out = exec_cli(Stop_ME)
+        _out = exec_cli(check_kill_ME)
+
+        if int(_out) == 1:
+            _status = 0
+        else:
+            _status = 1
+
+        return {"code": _status}
