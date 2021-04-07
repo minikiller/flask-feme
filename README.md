@@ -132,3 +132,10 @@ flask-jwt: current_identity
 ```
 ab -n 500 -c 500 http://localhost:8000/
 ```
+
+### Web process failed to bind to $PORT within 60 seconds of launch
+
+https://stackoverflow.com/questions/17260338/deploying-flask-with-heroku
+
+### Service 配置
+目录位于 app/resources/service.py

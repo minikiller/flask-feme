@@ -16,4 +16,7 @@ GET  http://flask-feme.herokuapp.com/api/v1/roles
 Authorization : JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MTcwMjkwNTcsImlhdCI6MTYxNDQzNzA1NywibmJmIjoxNjE0NDM3MDU3LCJpZGVudGl0eSI6MX0.AP5hMrH9H36uC0eqbu1wzNeVSm56ysRB_dhUQ5MfbMc
 
 ###
-GET  https://flask-feme.herokuapp.com/api/v1/trades
+GET  https://flask-feme.herokuapp.com/dev-api/v1/trades
+
+###
+GET  https://flask-feme.herokuapp.com/dev-api/v1/settings
